@@ -1,25 +1,29 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import { get_request, post_request } from './setting/axios';
+import { useQuery } from 'react-query';
+import LayoutComponent from './components/cardComponant/LayoutComponent';
 
-function App() {
+const App = () => {
+  const userLogin = async () => {
+    const payload = {
+      "email":"whessel@example.com",
+      "password": "password"
+    }
+    const response = await (post_request('auth/login', payload));
+    return response.data.data;
+  }
+  const { isLoading, error, data } = useQuery("UpcomingMovie", userLogin);
+    if( isLoading ){
+      return <div>User Login Loading...</div>
+    }
+
+    localStorage.setItem('token', JSON.stringify(data.token));
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <LayoutComponent/>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
